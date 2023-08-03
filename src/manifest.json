@@ -2,7 +2,7 @@
     "manifest_version" : 3,
     "name" : "「ツイート」よ、蘇れ！",
     "short_name" : "RVTW",
-    "version" : "0.0.1.0",
+    "version" : "0.0.1.1",
     "description" : "「ツイート」/「リツイート」の文字を復活させますっ！",
     "author" : "furyu",
     "content_scripts" : [{

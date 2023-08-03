@@ -9,6 +9,7 @@ if (request.status !== 200) return;
 const
     doc = new DOMParser().parseFromString(request.responseText, "text/html"),
     script_i18n_ja = doc.querySelector('script[src*="/i18n/ja"]');
+if (! script_i18n_ja) return; // 旧TweetDeck(Cookieのtweetdeck_version=legacy)だと存在しない
 request.open('GET', script_i18n_ja.src, false);
 request.send(null);
 if (request.status !== 200) return;
