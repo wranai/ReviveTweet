@@ -36,14 +36,20 @@ const
             start_observe();
             return;
         }
-        const
-            inject_script = document.createElement('script');
-        inject_script.setAttribute('type', target_script.getAttribute('type'));
-        inject_script.setAttribute('charset', target_script.getAttribute('charset'));
-        inject_script.setAttribute('nonce', target_script.getAttribute('nonce'));
-        inject_script.async = false;
-        inject_script.textContent = script_text;
-        target_script.after(inject_script);
+        /*
+        //const
+        //    inject_script = document.createElement('script');
+        //inject_script.setAttribute('type', target_script.getAttribute('type'));
+        //inject_script.setAttribute('charset', target_script.getAttribute('charset'));
+        //inject_script.setAttribute('nonce', target_script.getAttribute('nonce'));
+        //inject_script.async = false;
+        //inject_script.textContent = script_text;
+        //target_script.after(inject_script);
+        */
+        (new Function(script_text))();
+        // TODO: SCRIPT要素にしろFunction()にしろ、CSPにより制限されているためそのままだと動作しない
+        // ※manifest.json内でのcontent_security_policyではscript-srcの'unsafe-inline'や'unsafe-eval'は設定不可
+        // →現状、declarativeNetRequestによりresponseHeadersのContent-Security-Policyをremoveする方法しか思いつかない
     }),
     start_observe = () => observer.observe(document.documentElement, {childList: true, subtree: true}),
     stop_observe = () => observer.disconnect();

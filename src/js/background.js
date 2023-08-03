@@ -31,7 +31,7 @@ const
             },
             "condition" : {
                 "regexFilter": "^https?://([^.]*\\.)?twimg\\.com/.*?/i18n/..\\.",
-                "resourceTypes": ["script"],
+                "resourceTypes": ["script"]
             }
         }
     ];
