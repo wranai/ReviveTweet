@@ -7,8 +7,10 @@ request.send(null);
 if (request.status !== 200) return;
 
 const
+    support_langs = ['ja', 'en',],
+    css_selector_i18n = support_langs.map(lang => `script[src*="/i18n/${lang}."]`).join(','),
     doc = new DOMParser().parseFromString(request.responseText, "text/html"),
-    script_i18n = doc.querySelector('script[src*="/i18n/ja."],script[src*="/i18n/en."]');
+    script_i18n = doc.querySelector(css_selector_i18n);
 if (! script_i18n) return; // 旧TweetDeck(Cookieのtweetdeck_version=legacy)だと存在しない
 request.open('GET', script_i18n.src, false);
 request.send(null);
@@ -29,7 +31,7 @@ const
     observer = new MutationObserver((records) => {
         stop_observe();
         const
-            target_script = document.querySelector('script[src*="/i18n/ja."],script[src*="/i18n/en."]');
+            target_script = document.querySelector(css_selector_i18n);
         if (! target_script) {
             start_observe();
             return;

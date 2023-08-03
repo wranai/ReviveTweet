@@ -15,7 +15,7 @@ const
                 ]
             },
             "condition": {
-                "urlFilter":"||twitter.com",
+                "regexFilter": "^https?://([^.]*\\.)?(twitter|x)\\.com",
                 "resourceTypes":[
                     "main_frame",
                     "sub_frame",
@@ -30,19 +30,8 @@ const
                 "type": "block"
             },
             "condition" : {
-                "urlFilter": "||twimg.com/*/i18n/ja.",
-                "resourceTypes" : ["script"],
-            }
-        },
-        {
-            "id": 3,
-            "priority": 1,
-            "action": {
-                "type": "block"
-            },
-            "condition" : {
-                "urlFilter": "||twimg.com/*/i18n/en.",
-                "resourceTypes" : ["script"],
+                "regexFilter": "^https?://([^.]*\\.)?twimg\\.com/.*?/i18n/..\\.",
+                "resourceTypes": ["script"],
             }
         }
     ];

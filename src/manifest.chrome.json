@@ -2,12 +2,13 @@
     "manifest_version" : 3,
     "name" : "「ツイート」よ、蘇れ！",
     "short_name" : "RVTW",
-    "version" : "0.0.1.2",
+    "version" : "0.0.1.3",
     "description" : "「ツイート」/「リツイート」の文字を復活させますっ！",
     "author" : "furyu",
     "content_scripts" : [{
         "matches" : [
-            "*://*.twitter.com/*"
+            "*://*.twitter.com/*",
+            "*://*.x.com/*"
         ],
         "js" : [
             "js/start.js"
@@ -23,11 +24,13 @@
         "declarativeNetRequestFeedback"
     ],
     "host_permissions" : [
-        "*://*.twitter.com/*"
+        "*://*.twitter.com/*",
+        "*://*.x.com/*"
     ],
     "web_accessible_resources" : [{
         "matches" : [
-            "*://*.twitter.com/*"
+            "*://*.twitter.com/*",
+            "*://*.x.com/*"
         ],
         "resources" : [
             "js/*.js"
