@@ -1,5 +1,5 @@
-(() => {
 'use strict';
+(() => {
 const
     request = new XMLHttpRequest();
 request.open('GET', location.href, false);
@@ -8,9 +8,9 @@ if (request.status !== 200) return;
 
 const
     doc = new DOMParser().parseFromString(request.responseText, "text/html"),
-    script_i18n_ja = doc.querySelector('script[src*="/i18n/ja"]');
-if (! script_i18n_ja) return; // 旧TweetDeck(Cookieのtweetdeck_version=legacy)だと存在しない
-request.open('GET', script_i18n_ja.src, false);
+    script_i18n = doc.querySelector('script[src*="/i18n/ja."],script[src*="/i18n/en."]');
+if (! script_i18n) return; // 旧TweetDeck(Cookieのtweetdeck_version=legacy)だと存在しない
+request.open('GET', script_i18n.src, false);
 request.send(null);
 if (request.status !== 200) return;
 
@@ -18,18 +18,18 @@ const
     script_text = [
         ['再投稿', 'リツイート'],
         ['投稿', 'ツイート'],
-        ['[Rr]epost', (m) => m.charAt(0) + 'etweet'],
-        ['[Pp]ost', (m) => (m.charAt(0) == 'P' ? 'T' : 't') + 'weet'],
+        ['Repost', (m) => m.charAt(0) + 'etweet'],
+        ['Post', (m) => (m.charAt(0) == 'P' ? 'T' : 't') + 'weet'],
         ['XPro', 'TweetDeck' ],
-        [' X ', ' Twitter '],
-        ['"青"', '"Twitter Blue"'],
+        ['"(青|Blue)"', '"Twitter Blue"'],
+        [/([" 、。]|[々〇〻\u3400-\u9FFF\uF900-\uFAFF]|[\uD840-\uD87F][\uDC00-\uDFFF]|[\u3041-\u3096]|[\u30A1-\u30FA])X([" .、。]|[々〇〻\u3400-\u9FFF\uF900-\uFAFF]|[\uD840-\uD87F][\uDC00-\uDFFF]|[\u3041-\u3096]|[\u30A1-\u30FA])/, '$1Twitter$2', 'g'],
     ].reduce((acc, conf) => {
-        return acc.replace(new RegExp(conf[0], 'g'), conf[1]);
+        return acc.replace(new RegExp(conf[0], conf[2] ?? 'gi'), conf[1]);
     }, request.responseText),
     observer = new MutationObserver((records) => {
         stop_observe();
         const
-            target_script = document.querySelector('script[src*="/i18n/ja"]');
+            target_script = document.querySelector('script[src*="/i18n/ja."],script[src*="/i18n/en."]');
         if (! target_script) {
             start_observe();
             return;

@@ -15,7 +15,7 @@
 
 ## 注意書き
 - 動作保証は当然ありません、利用して発生した不具合等については当方は一切関知いたしません
-- 現状はManifest V3使用のため、Firefoxには未対応です
+- いちおう、manifest.jsonをmanifest.firefox.jsonの中身で上書きしてやればFirefox用になりますが、どうも動作が怪しいです
 - カッとなってやっつけで作ったものなので、Chrome ウェブストア等に登録する予定は今のところありません
 - 悪趣味な「𝕏」のアイコンも見慣れた鳥のアイコンに置き換えたいところですが、この拡張機能では対応していませんので、[twitter_icon_x_to_bird](https://chrome.google.com/webstore/detail/twittericonxtobird/iepkmhnkbldjmmgaekphkbiffjehajal?hl=ja)等を利用して置換してやりましょう……
 

@@ -1,3 +1,5 @@
+'use strict';
+((chrome) => {
 const
     net_request_rules = [
         {
@@ -28,13 +30,22 @@ const
                 "type": "block"
             },
             "condition" : {
-                "urlFilter": "||twimg.com/*/i18n/ja",
+                "urlFilter": "||twimg.com/*/i18n/ja.",
                 "resourceTypes" : ["script"],
-                //"excludedResourceTypes": ["xmlhttprequest"]
+            }
+        },
+        {
+            "id": 3,
+            "priority": 1,
+            "action": {
+                "type": "block"
+            },
+            "condition" : {
+                "urlFilter": "||twimg.com/*/i18n/en.",
+                "resourceTypes" : ["script"],
             }
         }
     ];
-
 
 chrome.declarativeNetRequest.updateDynamicRules({
     removeRuleIds : net_request_rules.map(rule => rule.id),
@@ -43,14 +54,15 @@ chrome.declarativeNetRequest.updateDynamicRules({
     //【覚書】
     //  onRuleMatchedDebugイベントはデバッグ時（パッケージされていない拡張機能時）のみ有効
     //  参照: https://developer.chrome.com/docs/extensions/reference/declarativeNetRequest/#event-onRuleMatchedDebug
-    if ( typeof chrome.declarativeNetRequest?.onRuleMatchedDebug?.addListener == 'function' ) {
+    if (typeof chrome.declarativeNetRequest?.onRuleMatchedDebug?.addListener == 'function') {
         try {
             chrome.declarativeNetRequest.onRuleMatchedDebug.addListener(function (obj) {
-                console.debug( '[declarativeNetRequest.onRuleMatchedDebug]', obj.request.url, obj );
+                console.debug('[declarativeNetRequest.onRuleMatchedDebug]', obj.request.url, obj);
             });
         }
-        catch ( error ) {
-            log_error( error );
+        catch (error) {
+            console.error(error);
         }
     }
 });
+})(((typeof browser != 'undefined') && browser.runtime) ? browser : chrome);
