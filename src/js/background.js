@@ -2,8 +2,21 @@
 ((chrome) => {
 const
     net_request_rules = [
-        {
+        { // i18nスクリプトを拒否(※別に取得し、文字列を置換してから実行)
             "id": 1,
+            "priority": 1,
+            "action": {
+                "type": "block"
+            },
+            "condition" : {
+                "regexFilter": "^https?://([^.]*\\.)?twimg\\.com/.*?/i18n/..\\.",
+                "resourceTypes": [
+                    "script"
+                ]
+            }
+        },
+        { // CSP設定無効化(TODO: 文字列置換後のスクリプトを実行するためにこれ以外の方法が思いつかない)
+            "id": 2,
             "priority": 1,
             "action": {
                 "type": "modifyHeaders",
@@ -21,17 +34,6 @@ const
                     "sub_frame",
                     "xmlhttprequest"
                 ]
-            }
-        },
-        {
-            "id": 2,
-            "priority": 1,
-            "action": {
-                "type": "block"
-            },
-            "condition" : {
-                "regexFilter": "^https?://([^.]*\\.)?twimg\\.com/.*?/i18n/..\\.",
-                "resourceTypes": ["script"]
             }
         }
     ];

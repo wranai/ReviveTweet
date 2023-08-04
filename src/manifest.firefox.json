@@ -5,20 +5,6 @@
     "version" : "0.0.1.4",
     "description" : "「ツイート」/「リツイート」の文字を復活させますっ！",
     "author" : "furyu",
-    "content_scripts" : [{
-        "matches" : [
-            "*://*.twitter.com/*",
-            "*://*.x.com/*"
-        ],
-        "js" : [
-            "js/start.js"
-        ],
-        "run_at" : "document_start",
-        "all_frames" : false
-    }],
-    "background"  : {
-        "scripts" : ["js/background.js"]
-    },
     "permissions" : [
         "declarativeNetRequest",
         "declarativeNetRequestFeedback"
@@ -35,5 +21,19 @@
         "resources" : [
             "js/*.js"
         ]
-    }]
+    }],
+    "content_scripts" : [{
+        "matches" : [
+            "*://*.twitter.com/*",
+            "*://*.x.com/*"
+        ],
+        "js" : [
+            "js/start.js"
+        ],
+        "run_at" : "document_start",
+        "all_frames" : false
+    }],
+    "background"  : {
+        "scripts" : ["js/background.js"]
+    }
 }
