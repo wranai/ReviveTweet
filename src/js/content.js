@@ -1,10 +1,13 @@
+/*
+// i18n対応用スクリプト上のキーワードを置換した上で適用
+*/
 'use strict';
 (async () => {
-//【覚書】
-// i18nスクリプトを取得するまでの処理を、当初は‎実行順が気になったのでXMLHttpRequestを用いて同期的に実行していた→どうやら非同期でも問題ない模様
+// ■オリジナルのi18nスクリプト内容を取得
+// [覚書] i18nスクリプトを取得するまでの処理を、当初は‎実行順が気になったのでXMLHttpRequestを用いて同期的に実行していた→どうやら非同期でも問題ない模様
 const
     support_langs = ['ja', 'en',],
-    css_selector_i18n = support_langs.map(lang => `script[src*="/i18n/${lang}."]`).join(','),
+    i18n_script_selector = support_langs.map(lang => `script[src*="/i18n/${lang}."]`).join(','),
     doc = await fetch(location.href).then(response => {
         if (! response.ok) {
             throw new Error(`${response.status} ${response.statusText}`);
@@ -14,11 +17,11 @@ const
 if (! doc) return;
 
 const
-    script_i18n = doc.querySelector(css_selector_i18n);
-if (! script_i18n) return; // 旧TweetDeck(Cookieのtweetdeck_version=legacy)だと存在しない
+    i18n_script = doc.querySelector(i18n_script_selector);
+if (! i18n_script) return; // 旧TweetDeck(Cookieのtweetdeck_version=legacy)だと存在しない
 
 const
-    original_script_text = await fetch(script_i18n.src).then(response => {
+    original_script_text = await fetch(i18n_script.src).then(response => {
         if (! response.ok) {
             throw new Error(`${response.status} ${response.statusText}`);
         }
@@ -26,10 +29,12 @@ const
     }).catch(error => console.error(error));
 if (! original_script_text) return;
 
+// ■スクリプト上のキーワードを置換
 const
-    script_text = [
+    patched_script_text = [
         ['再投稿', 'リツイート'],
         ['投稿', 'ツイート'],
+        ['ポスト', 'ツイート'],
         ['Repost', (m) => m.charAt(0) + 'etweet'],
         ['Post', (m) => (m.charAt(0) == 'P' ? 'T' : 't') + 'weet'],
         ['XPro', 'TweetDeck' ],
@@ -42,7 +47,7 @@ const
 await new Promise((resolve, reject) => {
     const
         final_decision = () => {
-            if (document.querySelector(css_selector_i18n)) {
+            if (document.querySelector(i18n_script_selector)) {
                 resolve();
                 return true;
             }
@@ -60,11 +65,17 @@ await new Promise((resolve, reject) => {
     start_observe();
 });
 
-(new Function(script_text))(); // self.webpackChunk_twitter_responsive_web(配列)が更新される
-//【TODO】
+// ■置換後のスクリプトを適用
+(new Function(patched_script_text))();
+// ※これでself.webpackChunk_twitter_responsive_web(配列)上にi18n関連処理が追加される模様
+
+//【未解決な問題】
 //  SCRIPT要素にしろFunction()にしろ、CSPにより制限されているためそのままだと動作しない
-//  ※manifest.json内でのcontent_security_policyではscript-srcの'unsafe-inline'や'unsafe-eval'は設定不可
-//  ※sandboxな隠しiframeを埋め込んでそこで実行した場合にはCSPにかからないようにできるが、最終的な結果のオブジェクトに関数が含まれるため、postMessage()による受け渡しは不可
-//        > Uncaught DOMException: Failed to execute 'postMessage' on 'Window': <Object> could not be cloned.
-// →現状、declarativeNetRequestによりresponseHeadersのContent-Security-Policyをremoveする方法しか思いつかない
+//
+//  - manifest.json内でのcontent_security_policyではscript-srcの'unsafe-inline'や'unsafe-eval'は設定不可
+//  - sandboxな隠しiframeを埋め込んでそこで実行した場合にはCSPにかからないようにできるが、最終的な結果のオブジェクトに関数が含まれるため、postMessage()による受け渡しは不可
+//    > Uncaught DOMException: Failed to execute 'postMessage' on 'Window': <Object> could not be cloned.
+//  - webRequest.onCompletedで監視してページのHTTP Responseヘッダ(Content-Security-Policy)よりnonceを取得することも考えたが、details.type="main_frame"のものはほぼ捉えられない（ページをスーパーリロード(Ctrl+F5)した場合には捉えられるため、おそらくキャッシュ絡み）
+//
+// →現状、declarativeNetRequestによりresponseHeadersのContent-Security-Policyをremoveする実装方法しか思いつかない
 })();

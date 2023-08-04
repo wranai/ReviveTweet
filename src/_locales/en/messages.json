@@ -1,0 +1,14 @@
+{
+    "ext_title" : {
+        "message" : "Revive Tweet !",
+        "description" : "The title of the extension."
+    },
+    "ext_short_name" : {
+        "message" : "RVTW",
+        "description" : "The short version of the extension's name."
+    },
+    "ext_description" : {
+        "message" : "\"Tweet\"/\"ReTweet\" are back !",
+        "description" : "The description of the extension."
+    }
+}

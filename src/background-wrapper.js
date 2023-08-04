@@ -6,5 +6,5 @@ try {
     importScripts('js/background.js');
 }
 catch (error) {
-    console.log(error);
+    console.error(error);
 }
