@@ -1,8 +1,8 @@
 {
-    "manifest_version" : 3,
+    "manifest_version" : 2,
     "name" : "__MSG_ext_title__",
     "short_name" : "__MSG_ext_short_name__",
-    "version" : "0.0.1.5",
+    "version" : "0.0.1.6",
     "description" : "__MSG_ext_description__",
     "author" : "furyu",
     "default_locale" : "ja",
@@ -14,22 +14,15 @@
         "128" : "img/icon_128.png"
     },
     "permissions" : [
-        "declarativeNetRequest",
-        "declarativeNetRequestFeedback"
-    ],
-    "host_permissions" : [
+        "webRequest",
+        "webRequestBlocking",
+        "*://*.twimg.com/*",
         "*://*.twitter.com/*",
         "*://*.x.com/*"
     ],
-    "web_accessible_resources" : [{
-        "matches" : [
-            "*://*.twitter.com/*",
-            "*://*.x.com/*"
-        ],
-        "resources" : [
-            "js/*.js"
-        ]
-    }],
+    "web_accessible_resources" : [
+        "js/*.js"
+    ],
     "content_scripts" : [{
         "matches" : [
             "*://*.twitter.com/*",
@@ -42,7 +35,7 @@
         "all_frames" : false
     }],
     "background" : {
-        "scripts" : ["js/background.js"]
+        "scripts" : ["js/background.firefox.js"]
     },
     "browser_specific_settings" : {
         "gecko": {
