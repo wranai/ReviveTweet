@@ -37,14 +37,16 @@ const
         ['ポスト', 'ツイート'],
         ['Repost', (m) => m.charAt(0) + 'etweet'],
         ['Post', (m) => (m.charAt(0) == 'P' ? 'T' : 't') + 'weet'],
-        ['XPro', 'TweetDeck' ],
         ['"(青|Blue)"', '"Twitter Blue"'],
         ['Premium', 'Twitter Blue', 'g'],
+        ['X\\s*Pro([,.\\s"\'?])', 'TweetDeck$1', 'g' ],
         [/([" 、。]|[々〇〻\u3400-\u9FFF\uF900-\uFAFF]|[\uD840-\uD87F][\uDC00-\uDFFF]|[\u3041-\u3096]|[\u30A1-\u30FA])X([" .、。]|[々〇〻\u3400-\u9FFF\uF900-\uFAFF]|[\uD840-\uD87F][\uDC00-\uDFFF]|[\u3041-\u3096]|[\u30A1-\u30FA])/, '$1Twitter$2', 'g'],
     ].reduce((acc_script_text, conf) => {
         return acc_script_text.replace(new RegExp(conf[0], conf[2] ?? 'gi'), conf[1]);
     }, original_script_text);
-    
+
+console.debug('patched i18n script text:', patched_script_text);
+
 await new Promise((resolve, reject) => {
     const
         final_decision = () => {
